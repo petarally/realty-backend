@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 // import { Pool } from "pg";
 import routes from "./routes/index.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -19,6 +20,12 @@ pool
   .then(() => console.log("Connected to PostgreSQL"))
   .catch((err) => console.error("Connection error", err.stack));
 */
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 app.use(routes);
 
