@@ -6,12 +6,9 @@ import {
 } from "../controllers/nekretnine.js";
 import express from "express";
 import { verify } from "../controllers/korisnici.js";
-import { postPosts, updatePostById } from "../postPosts.js";
-import multer from "multer";
-import uploadToR2 from "../r2.js";
+import { updatePostById } from "../postPosts.js";
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
 
 // Dohvaćanje svih nekretnina
 router.get("/", async (req, res) => {
@@ -25,25 +22,30 @@ router.get("/", async (req, res) => {
 });
 
 // Dodavanje nove nekretnine
-router.post("/", upload.array("images"), verify, async (req, res) => {
+router.post("/", verify, async (req, res) => {
   const data = req.body;
-  const files = req.files;
-
   try {
-    // Upload images if they exist
-    const imageUrls = files.length
-      ? await Promise.all(files.map(uploadToR2))
-      : [];
-
-    // Add image URLs to data
-    data.imageUrls = imageUrls;
-
-    // Save to database
-    const dataPosted = await postPosts(data);
-    res.json(dataPosted);
+    const collection = await dbconnection("nekretnine");
+    const result = await collection.insertOne(data);
+    const nekretninaId = result.insertedId;
+    res
+      .status(201)
+      .json({ message: "Nekretnina je uspješno dodana", id: nekretninaId });
   } catch (error) {
-    console.error("Error posting to postPosts:", error);
-    res.status(500).json({ error: "An error occurred while posting data" });
+    console.error("Greška prilikom dodavanja nekretnine:", error);
+    res.status(500).json({ error: "Greška prilikom dodavanja nekretnine" });
+  }
+});
+
+router.post("/prodavatelji", async (req, res) => {
+  const data = req.body;
+  try {
+    const collection = await dbconnection("prodavatelji");
+    const result = await collection.insertOne(data);
+    res.status(201).json({ message: "Prodavatelj je uspješno dodan" });
+  } catch (error) {
+    console.error("Greška prilikom dodavanja prodavatelja:", error);
+    res.status(500).json({ error: "Greška prilikom dodavanja prodavatelja" });
   }
 });
 

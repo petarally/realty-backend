@@ -5,6 +5,8 @@ import korisniciRoutes from "./routes/korisniciRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import pretplatniciRoutes from "./routes/pretplatniciRoutes.js";
 import { translateText } from "./translator.js";
+import imageUploadRoute from "./routes/testUploadRoutes.js";
+import nekretnineRoutes from "./routes/nekretnineRoutes.js";
 
 dotenv.config();
 
@@ -14,10 +16,16 @@ const port = 3232;
 app.use(cors());
 app.use(express.json());
 
+// TEST UPLOAD
+app.use("/upload-images", imageUploadRoute);
+
 // KORISNICI
 app.use("/auth", authRoutes);
 app.use("/users", korisniciRoutes);
 app.use("/pretplatnici", pretplatniciRoutes);
+
+// NEKRETNINE
+app.use("/nekretnine", nekretnineRoutes);
 
 // TRANSLATE
 app.post("/translate", async (req, res) => {
