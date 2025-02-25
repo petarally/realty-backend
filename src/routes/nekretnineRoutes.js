@@ -7,6 +7,7 @@ import {
 import express from "express";
 import { verify } from "../controllers/korisnici.js";
 import { updatePostById } from "../postPosts.js";
+import dbconnection from "../connection.js";
 
 const router = express.Router();
 
@@ -41,7 +42,7 @@ router.post("/prodavatelji", async (req, res) => {
   const data = req.body;
   try {
     const collection = await dbconnection("prodavatelji");
-    const result = await collection.insertOne(data);
+    await collection.insertOne(data);
     res.status(201).json({ message: "Prodavatelj je uspješno dodan" });
   } catch (error) {
     console.error("Greška prilikom dodavanja prodavatelja:", error);
