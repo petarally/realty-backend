@@ -25,11 +25,13 @@ export async function getPostById(productId) {
 export async function getSellers() {
   try {
     const collectionData = await dbconnection("prodavatelji");
-    const cursor = collectionData.find();
-    return await cursor.toArray();
+    const sellers = await collectionData.find().toArray();
+
+    console.log("Sellers from DB:", sellers);
+    return sellers;
   } catch (error) {
     console.error("Error fetching sellers:", error);
-    return []; // Return an empty array on error
+    return [];
   }
 }
 

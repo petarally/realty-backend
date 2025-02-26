@@ -50,6 +50,17 @@ router.post("/prodavatelji", async (req, res) => {
   }
 });
 
+// Pretraga nekretnina
+router.get("/search", async (req, res) => {
+  const filters = req.query;
+  try {
+    const properties = await searchProperties(filters);
+    res.json(properties);
+  } catch (error) {
+    res.status(500).json({ error: "Error searching properties" });
+  }
+});
+
 // Dohvaćanje nekretnine po ID-u
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
@@ -81,24 +92,18 @@ router.patch("/:id", verify, async (req, res) => {
   }
 });
 
-// Pretraga nekretnina
-router.get("/search", async (req, res) => {
-  const filters = req.query;
-  try {
-    const properties = await searchProperties(filters);
-    res.json(properties);
-  } catch (error) {
-    res.status(500).json({ error: "Error searching properties" });
-  }
-});
-
 // Dohvaćanje prodavatelja
-router.get("/sellers", async (req, res) => {
+router.get("/prodavatelji", async (req, res) => {
+  console.log("Fetching sellers...");
   try {
-    const properties = await getSellers();
-    res.json(properties);
+    const sellers = await getSellers();
+    if (!sellers.length) {
+      return res.status(404).json({ error: "No sellers found" });
+    }
+    res.json(sellers);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching sellers" });
+    console.error("Error in /prodavatelji route:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

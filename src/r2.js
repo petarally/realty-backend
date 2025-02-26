@@ -22,7 +22,9 @@ export default async function uploadToR2(file) {
 
   try {
     await s3Client.send(new PutObjectCommand(params));
-    return `https://${process.env.R2_BUCKET_NAME}.${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${fileKey}`;
+
+    // 🔥 Return public URL instead of private format
+    return `https://pub-${process.env.R2_ACCOUNT_ID}.r2.dev/${fileKey}`;
   } catch (error) {
     console.error("Error uploading to R2:", error);
     throw error;
