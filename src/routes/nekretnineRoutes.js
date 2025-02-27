@@ -2,7 +2,6 @@ import {
   getPosts,
   getPostById,
   searchProperties,
-  getSellers,
 } from "../controllers/nekretnine.js";
 import express from "express";
 import { verify } from "../controllers/korisnici.js";
@@ -85,25 +84,25 @@ router.patch("/:id", verify, async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
 
+    console.log("PATCH request received for ID:", id);
+    console.log("Update data:", updateData);
+
+    if (!updateData || Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: "No update data provided" });
+    }
+
+    const existingPost = await getPostById(id);
+    if (!existingPost) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
     const updatedPost = await updatePostById(id, updateData);
+    console.log("Updated post:", updatedPost); // Debugging
+
     res.json({ message: "Post updated successfully", updatedPost });
   } catch (error) {
+    console.error("Error updating property:", error);
     res.status(500).json({ error: error.message });
-  }
-});
-
-// Dohvaćanje prodavatelja
-router.get("/prodavatelji", async (req, res) => {
-  console.log("Fetching sellers...");
-  try {
-    const sellers = await getSellers();
-    if (!sellers.length) {
-      return res.status(404).json({ error: "No sellers found" });
-    }
-    res.json(sellers);
-  } catch (error) {
-    console.error("Error in /prodavatelji route:", error);
-    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

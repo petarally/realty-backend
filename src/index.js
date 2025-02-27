@@ -7,6 +7,7 @@ import pretplatniciRoutes from "./routes/pretplatniciRoutes.js";
 import { translateText } from "./translator.js";
 import imageUploadRoute from "./routes/testUploadRoutes.js";
 import nekretnineRoutes from "./routes/nekretnineRoutes.js";
+import prodavateljiRoutes from "./routes/prodavateljiRoute.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/upload-images", imageUploadRoute);
 app.use("/auth", authRoutes);
 app.use("/users", korisniciRoutes);
 app.use("/pretplatnici", pretplatniciRoutes);
+app.use("/prodavatelji", prodavateljiRoutes);
 
 // NEKRETNINE
 app.use("/nekretnine", nekretnineRoutes);

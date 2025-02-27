@@ -24,7 +24,7 @@ export default async function uploadToR2(file) {
     await s3Client.send(new PutObjectCommand(params));
 
     // 🔥 Return public URL instead of private format
-    return `https://pub-${process.env.R2_ACCOUNT_ID}.r2.dev/${fileKey}`;
+    return `https://pub-${process.env.R2_PUB_KEY}.r2.dev/${fileKey}`;
   } catch (error) {
     console.error("Error uploading to R2:", error);
     throw error;
