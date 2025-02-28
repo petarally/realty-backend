@@ -8,6 +8,7 @@ import { translateText } from "./translator.js";
 import imageUploadRoute from "./routes/testUploadRoutes.js";
 import nekretnineRoutes from "./routes/nekretnineRoutes.js";
 import prodavateljiRoutes from "./routes/prodavateljiRoute.js";
+import deleteRoutes from "./routes/deleteRoutes.js";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use("/prodavatelji", prodavateljiRoutes);
 
 // NEKRETNINE
 app.use("/nekretnine", nekretnineRoutes);
+app.use("/delete", deleteRoutes);
 
 // TRANSLATE
 app.post("/translate", async (req, res) => {
