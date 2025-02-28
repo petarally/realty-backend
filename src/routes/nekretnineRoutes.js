@@ -52,6 +52,7 @@ router.post("/prodavatelji", async (req, res) => {
 // Pretraga nekretnina
 router.get("/search", async (req, res) => {
   const filters = req.query;
+  console.log("Search filters:", filters);
   try {
     const properties = await searchProperties(filters);
     res.json(properties);

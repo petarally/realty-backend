@@ -42,17 +42,21 @@ export async function searchProperties(filters) {
     // Kreiranje dinamičkog upita
     const query = {};
 
+    if (filters.propertyId) {
+      query._id = new ObjectId(filters.propertyId);
+    }
+
     if (filters.maxPrice && !isNaN(filters.maxPrice)) {
       query.price = { $lte: parseFloat(filters.maxPrice) }; // Maksimalna cijena
     }
     if (filters.maxArea && !isNaN(filters.maxArea)) {
       query.livableArea = { $lte: parseFloat(filters.maxArea) }; // Maksimalna površina
     }
-    if (filters.location) {
-      query.location = { $regex: filters.location, $options: "i" }; // Pretraga po lokaciji
+    if (filters.address) {
+      query.address = { $regex: filters.address, $options: "i" }; // Pretraga po lokaciji
     }
     if (filters.type) {
-      query.type = filters.type; // Vrsta nekretnine
+      query.buildType = filters.type; // Vrsta nekretnine
     }
 
     // Pronalaženje nekretnina koje zadovoljavaju filtere
