@@ -37,6 +37,7 @@ router.post("/", verify, async (req, res) => {
   }
 });
 
+// Dodavanje novog prodavatelja
 router.post("/prodavatelji", async (req, res) => {
   const data = req.body;
   try {
@@ -98,7 +99,7 @@ router.patch("/:id", verify, async (req, res) => {
     }
 
     const updatedPost = await updatePostById(id, updateData);
-    console.log("Updated post:", updatedPost); // Debugging
+    console.log("Updated post:", updatedPost);
 
     res.json({ message: "Post updated successfully", updatedPost });
   } catch (error) {

@@ -1,12 +1,14 @@
 import dbconnection from "../connection.js";
 import { ObjectId } from "mongodb";
 
+// Funkcija za dohvaćanje svih nekretnina
 export async function getPosts() {
   const collectionData = await dbconnection("nekretnine");
-  const cursor = collectionData.find({ deleted: { $ne: true } }); // Filtrira podatke gde deleted nije true
+  const cursor = collectionData.find({ deleted: { $ne: true } });
   return await cursor.toArray();
 }
 
+// Funkcija za dohvaćanje nekretnina po ID-u
 export async function getPostById(productId) {
   try {
     if (!ObjectId.isValid(productId)) {
@@ -15,13 +17,14 @@ export async function getPostById(productId) {
     const collection = await dbconnection("nekretnine");
     const post = await collection.findOne({ _id: new ObjectId(productId) });
 
-    return post || null; // Return null if not found
+    return post || null;
   } catch (error) {
     console.error("Error fetching post by ID:", error);
     throw error;
   }
 }
 
+// Funkcija za dohvaćanje svih prodavatelja
 export async function getSellers() {
   try {
     const collectionData = await dbconnection("prodavatelji");
@@ -35,17 +38,14 @@ export async function getSellers() {
   }
 }
 
+// Funkcija za dohvaćanje nekretnina po zadanom parametru
 export async function searchProperties(filters) {
   try {
     const collection = await dbconnection("nekretnine");
-
-    // Kreiranje dinamičkog upita
     const query = {};
-
     if (filters.propertyId) {
       query._id = new ObjectId(filters.propertyId);
     }
-
     if (filters.maxPrice && !isNaN(filters.maxPrice)) {
       query.price = { $lte: parseFloat(filters.maxPrice) }; // Maksimalna cijena
     }

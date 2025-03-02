@@ -42,9 +42,9 @@ router.patch("/:id", verify, async (req, res) => {
   }
 });
 
+// Ruta za registraciju novog agenta
 router.post("/createUser", verify, async (req, res) => {
-  console.log("Request body:", req.body); // Log request data
-  const userData = { ...req.body, rola: req.body.rola || "agent" };
+  const userData = { ...req.body, rola: "agent" };
   console.log(userData);
   try {
     const newUserId = await registerUser(userData);

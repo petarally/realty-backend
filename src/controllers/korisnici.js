@@ -1,9 +1,9 @@
 import dbconnection from "../connection.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
 import { ObjectId } from "mongodb";
 
+// Funkcija za registraciju korisnika (agenti, admini)
 export async function registerUser(userData) {
   let db = await dbconnection("korisnici");
   let doc = {
@@ -22,18 +22,19 @@ export async function registerUser(userData) {
     console.log(userData);
   } catch (e) {
     if (e.code == 11000) {
-      throw new Error("User already exists");
+      throw new Error("Korisnik već postoji");
     }
     console.log(e.code);
   }
 }
 
+// Funkcija za autentifikaciju korisnika (agenti, admini)
 export async function authenticateUser(email, password) {
   const db = await dbconnection("korisnici");
   const user = await db.findOne({ email });
 
   if (!user) {
-    console.log("No user found with email:", email);
+    console.log("Korisnik s danom email adresom nije pronađen:", email);
     throw new Error("Invalid credentials");
   }
 
@@ -46,25 +47,26 @@ export async function authenticateUser(email, password) {
 
   console.log("Preparing to sign JWT");
   const token = jwt.sign(
-    { email: user.email, role: user.rola }, // Store role instead of boolean
+    { email: user.email, role: user.rola },
     process.env.JWT_SECRET,
     { algorithm: "HS512", expiresIn: "365d" }
   );
 
-  delete user.password; // Ensure password is not exposed in response
+  delete user.password;
 
   return {
     token,
     email: user.email,
-    role: user.rola, // Return role instead of `isAdmin`
+    role: user.rola,
   };
 }
 
+// Funkcija za dohvaćanje svih korisnika (agenti, admini)
 export async function getAllUsers() {
   let db = await dbconnection("korisnici");
   try {
     let users = await db.find().toArray();
-    users.forEach((user) => delete user.password); // Remove password from each user
+    users.forEach((user) => delete user.password);
     return users;
   } catch (e) {
     console.log(e);
@@ -72,12 +74,13 @@ export async function getAllUsers() {
   }
 }
 
+// Funkcija za dohvaćanje korisnika po ID-u (agenti, admini)
 export async function getUserById(userId) {
   let db = await dbconnection("korisnici");
   try {
     let user = await db.findOne({ _id: new ObjectId(userId) });
     if (user) {
-      delete user.password; // Remove password from user
+      delete user.password;
       return user;
     } else {
       throw new Error("User not found");
@@ -88,6 +91,7 @@ export async function getUserById(userId) {
   }
 }
 
+// Funkcija za ažuriranje korisnika po ID-u (agenti, admini)
 export async function updateUserById(userId, updateData) {
   let db = await dbconnection("korisnici");
   try {
@@ -108,6 +112,7 @@ export async function updateUserById(userId, updateData) {
   }
 }
 
+// Funkcija za brisanje korisnika po ID-u (agenti, admini)
 export function verify(req, res, next) {
   try {
     if (!req.headers.authorization) {
@@ -115,8 +120,8 @@ export function verify(req, res, next) {
     }
 
     let [type, token] = req.headers.authorization.split(" ");
-    console.log("Token type:", type); // Provjeri koji je tip tokena
-    console.log("Token:", token); // Provjeri što dolazi kao token
+    console.log("Token type:", type);
+    console.log("Token:", token);
 
     if (type !== "Bearer") {
       return res.status(401).json({ error: "Invalid token type" });

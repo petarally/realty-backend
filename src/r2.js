@@ -1,4 +1,8 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -11,7 +15,7 @@ const s3Client = new S3Client({
   },
 });
 
-export default async function uploadToR2(file) {
+export async function uploadToR2(file) {
   const fileKey = `${Date.now()}-${file.originalname}`;
   const params = {
     Bucket: process.env.R2_BUCKET_NAME,
@@ -22,11 +26,27 @@ export default async function uploadToR2(file) {
 
   try {
     await s3Client.send(new PutObjectCommand(params));
-
-    // 🔥 Return public URL instead of private format
     return `https://pub-${process.env.R2_PUB_KEY}.r2.dev/${fileKey}`;
   } catch (error) {
     console.error("Error uploading to R2:", error);
     throw error;
   }
 }
+
+export async function deleteFromR2(imageUrl) {
+  try {
+    const fileKey = imageUrl.split("/").pop();
+    const params = {
+      Bucket: process.env.R2_BUCKET_NAME,
+      Key: fileKey,
+    };
+
+    await s3Client.send(new DeleteObjectCommand(params));
+    console.log(`Successfully deleted ${fileKey} from R2`);
+  } catch (error) {
+    console.error("Error deleting from R2:", error);
+    throw error;
+  }
+}
+
+export default uploadToR2;
