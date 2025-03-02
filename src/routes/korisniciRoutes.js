@@ -3,6 +3,7 @@ import {
   getAllUsers,
   getUserById,
   updateUserById,
+  registerUser,
 } from "../controllers/korisnici.js";
 import { verify } from "../controllers/korisnici.js";
 
@@ -37,6 +38,19 @@ router.patch("/:id", verify, async (req, res) => {
     const result = await updateUserById(userId, updateData);
     res.json({ message: "User updated successfully", result });
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/createUser", verify, async (req, res) => {
+  console.log("Request body:", req.body); // Log request data
+  const userData = { ...req.body, rola: req.body.rola || "agent" };
+  console.log(userData);
+  try {
+    const newUserId = await registerUser(userData);
+    res.status(201).json({ userId: newUserId });
+  } catch (error) {
+    console.error("Error creating user:", error);
     res.status(500).json({ error: error.message });
   }
 });
