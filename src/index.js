@@ -1,13 +1,13 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import korisniciRoutes from "./routes/korisniciRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
-import pretplatniciRoutes from "./routes/pretplatniciRoutes.js";
-import imageUploadRoute from "./routes/testUploadRoutes.js";
-import nekretnineRoutes from "./routes/nekretnineRoutes.js";
-import prodavateljiRoutes from "./routes/prodavateljiRoute.js";
 import deleteRoutes from "./routes/deleteRoutes.js";
+import korisniciRoutes from "./routes/korisniciRoutes.js";
+import nekretnineRoutes from "./routes/nekretnineRoutes.js";
+import pretplatniciRoutes from "./routes/pretplatniciRoutes.js";
+import prodavateljiRoutes from "./routes/prodavateljiRoute.js";
+import imageUploadRoute from "./routes/testUploadRoutes.js";
 
 dotenv.config();
 
@@ -30,9 +30,9 @@ app.use("/prodavatelji", prodavateljiRoutes);
 app.use("/nekretnine", nekretnineRoutes);
 app.use("/delete", deleteRoutes);
 
-app.get("/", (req, res) => {
+/*app.get("/", (req, res) => {
   res.status(403).send("403 Unauthorized. Contact Administrator.");
-});
+});*/
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
