@@ -2,10 +2,10 @@ import {
   getPosts,
   getPostById,
   searchProperties,
+  updatePostById,
 } from "../controllers/nekretnine.js";
 import express from "express";
 import { verify } from "../controllers/korisnici.js";
-import { updatePostById } from "../postPosts.js";
 import dbconnection from "../connection.js";
 
 const router = express.Router();

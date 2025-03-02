@@ -66,3 +66,36 @@ export async function searchProperties(filters) {
     throw error;
   }
 }
+
+// Funkcija za izmjenu podataka o nekretnini
+export async function updatePostById(productId, updateData) {
+  try {
+    const protectedFields = ["_id"];
+
+    const invalidFields = Object.keys(updateData).filter((field) =>
+      protectedFields.includes(field)
+    );
+
+    if (invalidFields.length > 0) {
+      throw new Error(
+        `Fields not allowed to be updated: ${invalidFields.join(", ")}`
+      );
+    }
+
+    const collection = await dbconnection("nekretnine");
+    const updatedPost = await collection.findOneAndUpdate(
+      { _id: new ObjectId(productId) },
+      { $set: updateData },
+      { returnDocument: "after" }
+    );
+
+    if (!updatedPost) {
+      throw new Error("Post not found");
+    }
+
+    return updatedPost.value;
+  } catch (error) {
+    console.error("Error updating post by ID:", error);
+    throw error;
+  }
+}
