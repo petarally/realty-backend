@@ -30,10 +30,6 @@ app.use("/prodavatelji", prodavateljiRoutes);
 app.use("/nekretnine", nekretnineRoutes);
 app.use("/delete", deleteRoutes);
 
-/*app.get("/", (req, res) => {
-  res.status(403).send("403 Unauthorized. Contact Administrator.");
-});*/
-
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
